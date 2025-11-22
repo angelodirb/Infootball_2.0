@@ -15,14 +15,23 @@ export class CompetitionsService {
   private async fetchFromApi(endpoint: string, params: Record<string, string> = {}) {
     const queryString = new URLSearchParams(params).toString();
     const url = `${this.apiUrl}${endpoint}${queryString ? '?' + queryString : ''}`;
+    const apiKey = this.getApiKey();
+
+    console.log('API Key length:', apiKey.length);
+    console.log('API Key first 4 chars:', apiKey.substring(0, 4));
+    console.log('Fetching URL:', url);
 
     const response = await fetch(url, {
       headers: {
-        'x-apisports-key': this.getApiKey(),
+        'x-apisports-key': apiKey,
       },
     });
 
+    console.log('Response status:', response.status);
+
     if (!response.ok) {
+      const errorBody = await response.text();
+      console.log('Error response:', errorBody);
       throw new HttpException('Error al obtener datos de API-FOOTBALL', HttpStatus.BAD_GATEWAY);
     }
 
