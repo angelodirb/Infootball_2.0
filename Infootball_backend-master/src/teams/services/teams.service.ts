@@ -1,0 +1,64 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Team } from '../entities/team.entity';
+
+@Injectable()
+export class TeamsService {
+  constructor(
+    @InjectRepository(Team)
+    private teamsRepository: Repository<Team>,
+  ) {}
+
+  async create(teamData: Partial<Team>): Promise<Team> {
+    const team = this.teamsRepository.create(teamData);
+    return await this.teamsRepository.save(team);
+  }
+
+  async findAll(): Promise<Team[]> {
+    return await this.teamsRepository.find({
+      relations: ['competition', 'players'],
+    });
+  }
+
+  async findOne(id: string): Promise<Team> {
+    const team = await this.teamsRepository.findOne({
+      where: { id },
+      relations: ['competition', 'players', 'homeMatches', 'awayMatches'],
+    });
+
+    if (!team) {
+      throw new NotFoundException(`Equipo con ID ${id} no encontrado`);
+    }
+
+    return team;
+  }
+
+  async findByCompetition(competitionId: string): Promise<Team[]> {
+    return await this.teamsRepository.find({
+      where: { competition: { id: competitionId } },
+      relations: ['competition'],
+    });
+  }
+
+  async search(query: string): Promise<Team[]> {
+    return await this.teamsRepository
+      .createQueryBuilder('team')
+      .where('team.name ILIKE :query', { query: `%${query}%` })
+      .orWhere('team.shortName ILIKE :query', { query: `%${query}%` })
+      .getMany();
+  }
+
+  async update(id: string, teamData: Partial<Team>): Promise<Team> {
+    await this.teamsRepository.update(id, teamData);
+    return this.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    const result = await this.teamsRepository.delete(id);
+    
+    if (result.affected === 0) {
+      throw new NotFoundException(`Equipo con ID ${id} no encontrado`);
+    }
+  }
+}
