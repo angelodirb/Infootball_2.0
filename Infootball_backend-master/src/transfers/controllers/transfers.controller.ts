@@ -21,8 +21,12 @@ export class TransfersController {
   }
 
   @Get()
-  findAll(): Promise<Transfer[]> {
-    return this.transfersService.findAll();
+  async findAll(@Query('source') source?: string): Promise<any[]> {
+    // Use API by default, use 'db' query param for database
+    if (source === 'db') {
+      return this.transfersService.findAll();
+    }
+    return this.transfersService.findAllFromApi();
   }
 
   @Get('top')
