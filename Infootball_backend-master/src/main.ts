@@ -1,4 +1,7 @@
 //main.ts
+import { config } from 'dotenv';
+config(); // Load .env before anything else
+
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
