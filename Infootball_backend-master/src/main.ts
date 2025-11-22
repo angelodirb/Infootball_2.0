@@ -1,6 +1,11 @@
 //main.ts
 import { config } from 'dotenv';
-config(); // Load .env before anything else
+import { resolve } from 'path';
+
+// Load .env from project root
+const result = config({ path: resolve(process.cwd(), '.env') });
+console.log('dotenv loaded:', result.error ? 'ERROR' : 'OK');
+console.log('API_FOOTBALL_KEY loaded:', process.env.API_FOOTBALL_KEY ? 'YES (length: ' + process.env.API_FOOTBALL_KEY.length + ')' : 'NO');
 
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
