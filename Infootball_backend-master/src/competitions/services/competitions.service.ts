@@ -1,21 +1,37 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CompetitionsService {
   private readonly apiUrl = 'https://v3.football.api-sports.io';
-  private readonly apiKey = process.env.API_FOOTBALL_KEY;
+
+  constructor(private configService: ConfigService) {}
+
+  private getApiKey(): string {
+    const key = this.configService.get<string>('API_FOOTBALL_KEY') || '';
+    return key;
+  }
 
   private async fetchFromApi(endpoint: string, params: Record<string, string> = {}) {
     const queryString = new URLSearchParams(params).toString();
     const url = `${this.apiUrl}${endpoint}${queryString ? '?' + queryString : ''}`;
+    const apiKey = this.getApiKey();
+
+    console.log('API Key length:', apiKey.length);
+    console.log('API Key first 4 chars:', apiKey.substring(0, 4));
+    console.log('Fetching URL:', url);
 
     const response = await fetch(url, {
       headers: {
-        'x-apisports-key': this.apiKey,
+        'x-apisports-key': apiKey,
       },
     });
 
+    console.log('Response status:', response.status);
+
     if (!response.ok) {
+      const errorBody = await response.text();
+      console.log('Error response:', errorBody);
       throw new HttpException('Error al obtener datos de API-FOOTBALL', HttpStatus.BAD_GATEWAY);
     }
 
