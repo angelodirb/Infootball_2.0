@@ -1,11 +1,15 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CompetitionsService {
   private readonly apiUrl = 'https://v3.football.api-sports.io';
 
+  constructor(private configService: ConfigService) {}
+
   private getApiKey(): string {
-    return process.env.API_FOOTBALL_KEY || '';
+    const key = this.configService.get<string>('API_FOOTBALL_KEY') || '';
+    return key;
   }
 
   private async fetchFromApi(endpoint: string, params: Record<string, string> = {}) {
