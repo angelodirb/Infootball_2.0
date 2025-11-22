@@ -1,215 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { transfersApi } from '../../../lib/api';
 
-// Datos completos de fichajes
-const allTransfersData = [
-  {
-    id: 1,
-    player: "Kylian Mbappé",
-    playerImage: "⚡",
-    position: "Delantero",
-    age: 25,
-    fromTeam: "PSG",
-    fromLogo: "🔴🔵",
-    toTeam: "Real Madrid",
-    toLogo: "⚪",
-    fee: "€180M",
-    date: "27 de octubre de 2025",
-    type: "Fichaje",
-    league: "La Liga",
-    featured: true,
-    stats: "45 goles en 48 partidos"
-  },
-  {
-    id: 2,
-    player: "Erling Haaland",
-    playerImage: "⚽",
-    position: "Delantero",
-    age: 24,
-    fromTeam: "Borussia Dortmund",
-    fromLogo: "🟡⚫",
-    toTeam: "Manchester City",
-    toLogo: "🔵",
-    fee: "€60M",
-    date: "25 de octubre de 2025",
-    type: "Fichaje",
-    league: "Premier League",
-    featured: true,
-    stats: "36 goles en 35 partidos"
-  },
-  {
-    id: 3,
-    player: "Vinícius Jr",
-    playerImage: "🌟",
-    position: "Extremo",
-    age: 24,
-    fromTeam: "Flamengo",
-    fromLogo: "🔴⚫",
-    toTeam: "Real Madrid",
-    toLogo: "⚪",
-    fee: "€45M",
-    date: "22 de octubre de 2025",
-    type: "Fichaje",
-    league: "La Liga",
-    featured: true,
-    stats: "28 goles en 40 partidos"
-  },
-  {
-    id: 4,
-    player: "Jude Bellingham",
-    playerImage: "👑",
-    position: "Centrocampista",
-    age: 21,
-    fromTeam: "Borussia Dortmund",
-    fromLogo: "🟡⚫",
-    toTeam: "Real Madrid",
-    toLogo: "⚪",
-    fee: "€103M",
-    date: "15 de octubre de 2025",
-    type: "Fichaje",
-    league: "La Liga",
-    featured: false,
-    stats: "6 goles en 25 partidos"
-  },
-  {
-    id: 5,
-    player: "Luis Díaz",
-    playerImage: "🔥",
-    position: "Extremo",
-    age: 27,
-    fromTeam: "Porto",
-    fromLogo: "🔵⚪",
-    toTeam: "Liverpool",
-    toLogo: "🔴",
-    fee: "€50M",
-    date: "20 de octubre de 2025",
-    type: "Fichaje",
-    league: "Premier League",
-    featured: false,
-    stats: "32 goles en 52 partidos"
-  },
-  {
-    id: 6,
-    player: "Alexis Sánchez",
-    playerImage: "🎯",
-    position: "Extremo",
-    age: 35,
-    fromTeam: "Barcelona",
-    fromLogo: "🔴🔵",
-    toTeam: "Udinese",
-    toLogo: "🤍🖤",
-    fee: "Libre",
-    date: "18 de octubre de 2025",
-    type: "Fichaje",
-    league: "Serie A",
-    featured: false,
-    stats: "10 goles en 38 partidos"
-  },
-  {
-    id: 7,
-    player: "Sergej Milinković-Savić",
-    playerImage: "🧠",
-    position: "Centrocampista",
-    age: 29,
-    fromTeam: "Lazio",
-    fromLogo: "🔵⚪",
-    toTeam: "Juventus",
-    toLogo: "⚫⚪",
-    fee: "€75M",
-    date: "16 de octubre de 2025",
-    type: "Fichaje",
-    league: "Serie A",
-    featured: false,
-    stats: "8 goles en 28 partidos"
-  },
-  {
-    id: 8,
-    player: "João Félix",
-    playerImage: "✨",
-    position: "Extremo",
-    age: 24,
-    fromTeam: "Barcelona",
-    fromLogo: "🔴🔵",
-    toTeam: "Atlético Madrid",
-    toLogo: "🔴⚪",
-    fee: "Préstamo",
-    date: "12 de octubre de 2025",
-    type: "Préstamo",
-    league: "La Liga",
-    featured: false,
-    stats: "5 goles en 15 partidos"
-  },
-  {
-    id: 9,
-    player: "Dani Ceballos",
-    playerImage: "🎪",
-    position: "Centrocampista",
-    age: 26,
-    fromTeam: "Real Madrid",
-    fromLogo: "⚪",
-    toTeam: "Real Betis",
-    toLogo: "🟢⚪",
-    fee: "Préstamo con opción",
-    date: "10 de octubre de 2025",
-    type: "Préstamo",
-    league: "La Liga",
-    featured: false,
-    stats: "4 goles en 22 partidos"
-  },
-  {
-    id: 10,
-    player: "Harry Kane",
-    playerImage: "👑⚽",
-    position: "Delantero",
-    age: 30,
-    fromTeam: "Bayern Múnich",
-    fromLogo: "🔴",
-    toTeam: "Tottenham",
-    toLogo: "⚪",
-    fee: "€60M",
-    date: "05 de octubre de 2025",
-    type: "Fichaje",
-    league: "Premier League",
-    featured: false,
-    stats: "52 goles en 62 partidos"
-  },
-  {
-    id: 11,
-    player: "Federico Chiesa",
-    playerImage: "🦅",
-    position: "Extremo",
-    age: 25,
-    fromTeam: "Juventus",
-    fromLogo: "⚫⚪",
-    toTeam: "Liverpool",
-    toLogo: "🔴",
-    fee: "€50M",
-    date: "02 de octubre de 2025",
-    type: "Fichaje",
-    league: "Premier League",
-    featured: false,
-    stats: "15 goles en 40 partidos"
-  },
-  {
-    id: 12,
-    player: "Alphonso Davies",
-    playerImage: "⚡🛡️",
-    position: "Lateral Izquierdo",
-    age: 23,
-    fromTeam: "Bayern Múnich",
-    fromLogo: "🔴",
-    toTeam: "Barcelona",
-    toLogo: "🔴🔵",
-    fee: "€70M",
-    date: "30 de septiembre de 2025",
-    type: "Fichaje",
-    league: "La Liga",
-    featured: false,
-    stats: "2 goles en 35 partidos"
-  }
-];
+interface Transfer {
+  id: number;
+  player: string;
+  playerImage: string;
+  position: string;
+  age: number;
+  fromTeam: string;
+  fromLogo: string;
+  toTeam: string;
+  toLogo: string;
+  fee: string;
+  date: string;
+  type: string;
+  league: string;
+  featured: boolean;
+  stats: string;
+}
 
 const transferTypes = [
   { name: "Todos", icon: "🌍" },
@@ -221,16 +32,60 @@ const transferTypes = [
 const leagues = [
   { name: "Todas las ligas", icon: "🌍" },
   { name: "La Liga", icon: "🇪🇸" },
-  { name: "Premier League", icon: "🏴󐁧󐁢󐁥󐁮󐁧󐁿" },
+  { name: "Premier League", icon: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
   { name: "Serie A", icon: "🇮🇹" },
   { name: "Bundesliga", icon: "🇩🇪" },
   { name: "Ligue 1", icon: "🇫🇷" }
 ];
 
-export default function FichaijesPage() {
-  const [selectedType, setSelectedType] = React.useState("Todos");
-  const [selectedLeague, setSelectedLeague] = React.useState("Todas las ligas");
-  const [searchTerm, setSearchTerm] = React.useState("");
+export default function FichajesPage() {
+  const [selectedType, setSelectedType] = useState("Todos");
+  const [selectedLeague, setSelectedLeague] = useState("Todas las ligas");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [allTransfersData, setAllTransfersData] = useState<Transfer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Cargar fichajes
+  useEffect(() => {
+    const fetchTransfers = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await transfersApi.getAll();
+        const transfers = Array.isArray(response) ? response : [];
+
+        // Transformar datos
+        const transformedTransfers: Transfer[] = transfers.map((item: any) => ({
+          id: item.id,
+          player: item.player?.name || item.playerName || 'Jugador',
+          playerImage: item.player?.photo || item.playerImage || '⚽',
+          position: item.player?.position || item.position || 'Jugador',
+          age: item.player?.age || item.age || 25,
+          fromTeam: item.fromTeam?.name || item.fromTeam || 'Equipo origen',
+          fromLogo: item.fromTeam?.logo || item.fromLogo || '🏠',
+          toTeam: item.toTeam?.name || item.toTeam || 'Equipo destino',
+          toLogo: item.toTeam?.logo || item.toLogo || '🏟️',
+          fee: item.fee || item.amount || 'Por definir',
+          date: item.date || new Date().toLocaleDateString('es-ES'),
+          type: item.type || 'Fichaje',
+          league: item.league || item.competition || 'Liga',
+          featured: item.featured || false,
+          stats: item.stats || ''
+        }));
+
+        setAllTransfersData(transformedTransfers);
+      } catch (err) {
+        console.error('Error fetching transfers:', err);
+        setError('Error al cargar los fichajes. Verifica que el backend esté corriendo.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransfers();
+  }, []);
 
   const filteredTransfers = allTransfersData.filter(transfer => {
     const matchType = selectedType === "Todos" || transfer.type === selectedType;
@@ -241,11 +96,45 @@ export default function FichaijesPage() {
     return matchType && matchLeague && matchSearch;
   });
 
-  const featuredTransfers = allTransfersData.filter(t => t.featured);
+  const featuredTransfers = allTransfersData.filter(t => t.featured).slice(0, 3);
+
+  // Calcular estadísticas del mercado
+  const totalFichajes = allTransfersData.length;
+  const prestamos = allTransfersData.filter(t => t.type === 'Préstamo').length;
+  const libres = allTransfersData.filter(t => t.type === 'Libre' || t.fee === 'Libre').length;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Cargando fichajes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold mb-2">Error</h2>
+          <p className="text-gray-400 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-green-500 text-black px-6 py-2 rounded-lg font-bold hover:bg-green-400 transition-colors"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white">
-      
+
       {/* Breadcrumb */}
       <div className="border-b border-gray-800/50 bg-black/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -260,7 +149,7 @@ export default function FichaijesPage() {
       {/* Hero Section */}
       <section className="relative pt-8 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 via-transparent to-transparent"></div>
-        
+
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Header */}
           <div className="mb-8">
@@ -276,78 +165,94 @@ export default function FichaijesPage() {
           </div>
 
           {/* Fichajes Destacados */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-            {featuredTransfers.map((transfer) => (
-              <div
-                key={transfer.id}
-                className="group relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl overflow-hidden border border-gray-800 hover:border-green-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/10 transform hover:scale-[1.02]"
-              >
-                {/* Background decorativo */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(34,197,94,0.1),transparent)]"></div>
+          {featuredTransfers.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+              {featuredTransfers.map((transfer) => (
+                <div
+                  key={transfer.id}
+                  className="group relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl overflow-hidden border border-gray-800 hover:border-green-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/10 transform hover:scale-[1.02]"
+                >
+                  {/* Background decorativo */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(34,197,94,0.1),transparent)]"></div>
 
-                {/* Header */}
-                <div className="relative p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="bg-green-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                      {transfer.type}
-                    </span>
-                    <span className="text-xs text-gray-400">{transfer.date}</span>
-                  </div>
+                  {/* Header */}
+                  <div className="relative p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="bg-green-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                        {transfer.type}
+                      </span>
+                      <span className="text-xs text-gray-400">{transfer.date}</span>
+                    </div>
 
-                  {/* Jugador */}
-                  <div className="text-center mb-6">
-                    <div className="text-6xl mb-3">{transfer.playerImage}</div>
-                    <h3 className="text-2xl font-black text-white group-hover:text-green-400 transition-colors mb-1">
-                      {transfer.player}
-                    </h3>
-                    <p className="text-sm text-gray-400">{transfer.position} • {transfer.age} años</p>
-                  </div>
+                    {/* Jugador */}
+                    <div className="text-center mb-6">
+                      {transfer.playerImage.startsWith('http') ? (
+                        <img src={transfer.playerImage} alt={transfer.player} className="w-16 h-16 mx-auto mb-3 rounded-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      ) : (
+                        <div className="text-6xl mb-3">{transfer.playerImage}</div>
+                      )}
+                      <h3 className="text-2xl font-black text-white group-hover:text-green-400 transition-colors mb-1">
+                        {transfer.player}
+                      </h3>
+                      <p className="text-sm text-gray-400">{transfer.position} • {transfer.age} años</p>
+                    </div>
 
-                  {/* Transfer Flow */}
-                  <div className="space-y-3">
-                    {/* De */}
-                    <div className="bg-gray-800/50 rounded-lg p-3">
-                      <p className="text-xs text-gray-400 mb-1">De</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{transfer.fromLogo}</span>
-                        <span className="font-bold">{transfer.fromTeam}</span>
+                    {/* Transfer Flow */}
+                    <div className="space-y-3">
+                      {/* De */}
+                      <div className="bg-gray-800/50 rounded-lg p-3">
+                        <p className="text-xs text-gray-400 mb-1">De</p>
+                        <div className="flex items-center gap-2">
+                          {transfer.fromLogo.startsWith('http') ? (
+                            <img src={transfer.fromLogo} alt={transfer.fromTeam} className="w-8 h-8 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                          ) : (
+                            <span className="text-2xl">{transfer.fromLogo}</span>
+                          )}
+                          <span className="font-bold">{transfer.fromTeam}</span>
+                        </div>
+                      </div>
+
+                      {/* Flecha */}
+                      <div className="flex justify-center">
+                        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-lg">
+                          ➜
+                        </div>
+                      </div>
+
+                      {/* Hacia */}
+                      <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                        <p className="text-xs text-green-400 mb-1">Hacia</p>
+                        <div className="flex items-center gap-2">
+                          {transfer.toLogo.startsWith('http') ? (
+                            <img src={transfer.toLogo} alt={transfer.toTeam} className="w-8 h-8 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                          ) : (
+                            <span className="text-2xl">{transfer.toLogo}</span>
+                          )}
+                          <span className="font-bold">{transfer.toTeam}</span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Flecha */}
-                    <div className="flex justify-center">
-                      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-lg">
-                        ➜
+                    {/* Precio y Stats */}
+                    <div className="mt-4 space-y-2">
+                      <div className="p-2 bg-gray-800/50 rounded-lg text-center">
+                        <p className="text-xs text-gray-400 mb-0.5">Traspaso</p>
+                        <p className="text-lg font-black text-green-400">{transfer.fee}</p>
                       </div>
-                    </div>
-
-                    {/* Hacia */}
-                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
-                      <p className="text-xs text-green-400 mb-1">Hacia</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{transfer.toLogo}</span>
-                        <span className="font-bold">{transfer.toTeam}</span>
-                      </div>
+                      {transfer.stats && (
+                        <div className="p-2 bg-gray-800/50 rounded-lg text-center text-xs">
+                          <p className="text-gray-300">{transfer.stats}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Precio y Stats */}
-                  <div className="mt-4 space-y-2">
-                    <div className="p-2 bg-gray-800/50 rounded-lg text-center">
-                      <p className="text-xs text-gray-400 mb-0.5">Traspaso</p>
-                      <p className="text-lg font-black text-green-400">{transfer.fee}</p>
-                    </div>
-                    <div className="p-2 bg-gray-800/50 rounded-lg text-center text-xs">
-                      <p className="text-gray-300">{transfer.stats}</p>
-                    </div>
-                  </div>
+                  {/* Borde brillante */}
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-green-500/50 transition-colors duration-300 pointer-events-none"></div>
                 </div>
-
-                {/* Borde brillante */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-green-500/50 transition-colors duration-300 pointer-events-none"></div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -423,7 +328,7 @@ export default function FichaijesPage() {
       {/* Grid de Fichajes */}
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          
+
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
@@ -447,7 +352,11 @@ export default function FichaijesPage() {
                   <div className="flex flex-col md:flex-row md:items-center gap-6">
                     {/* Izquierda - Equipo origen */}
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <span className="text-3xl">{transfer.fromLogo}</span>
+                      {transfer.fromLogo.startsWith('http') ? (
+                        <img src={transfer.fromLogo} alt={transfer.fromTeam} className="w-8 h-8 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      ) : (
+                        <span className="text-3xl">{transfer.fromLogo}</span>
+                      )}
                       <div className="min-w-0">
                         <p className="text-xs text-gray-400">Desde</p>
                         <p className="font-bold text-white truncate">{transfer.fromTeam}</p>
@@ -456,7 +365,11 @@ export default function FichaijesPage() {
 
                     {/* Centro - Jugador */}
                     <div className="flex items-center gap-2 flex-1 md:flex-none justify-center md:justify-start">
-                      <span className="text-3xl">{transfer.playerImage}</span>
+                      {transfer.playerImage.startsWith('http') ? (
+                        <img src={transfer.playerImage} alt={transfer.player} className="w-8 h-8 rounded-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      ) : (
+                        <span className="text-3xl">{transfer.playerImage}</span>
+                      )}
                       <div className="min-w-0">
                         <p className="font-bold text-white group-hover:text-green-400 transition-colors truncate">
                           {transfer.player}
@@ -472,7 +385,11 @@ export default function FichaijesPage() {
 
                     {/* Derecha - Equipo destino */}
                     <div className="flex items-center gap-3 flex-1 min-w-0 justify-end md:justify-start">
-                      <span className="text-3xl">{transfer.toLogo}</span>
+                      {transfer.toLogo.startsWith('http') ? (
+                        <img src={transfer.toLogo} alt={transfer.toTeam} className="w-8 h-8 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      ) : (
+                        <span className="text-3xl">{transfer.toLogo}</span>
+                      )}
                       <div className="min-w-0 text-right md:text-left">
                         <p className="text-xs text-green-400">Hacia</p>
                         <p className="font-bold text-white truncate">{transfer.toTeam}</p>
@@ -519,10 +436,10 @@ export default function FichaijesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-              { label: "Total de Fichajes", value: allTransfersData.length, icon: "📊" },
-              { label: "Inversión Total", value: "€800M+", icon: "💰" },
-              { label: "Préstamos", value: "2", icon: "🔄" },
-              { label: "Transferencias Libres", value: "1", icon: "🆓" }
+              { label: "Total de Fichajes", value: totalFichajes, icon: "📊" },
+              { label: "Inversión Total", value: "Calculando...", icon: "💰" },
+              { label: "Préstamos", value: prestamos, icon: "🔄" },
+              { label: "Transferencias Libres", value: libres, icon: "🆓" }
             ].map((stat, idx) => (
               <div key={idx} className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl p-6 border border-gray-800 hover:border-green-500/50 transition-all hover:shadow-lg hover:shadow-green-500/10">
                 <div className="flex items-center justify-between mb-3">
@@ -538,7 +455,7 @@ export default function FichaijesPage() {
 
       {/* Botón volver */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <Link 
+        <Link
           href="/"
           className="inline-flex items-center gap-3 bg-gray-800/50 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-600 border border-gray-700 hover:border-green-500 text-white hover:text-black font-bold px-6 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
         >
