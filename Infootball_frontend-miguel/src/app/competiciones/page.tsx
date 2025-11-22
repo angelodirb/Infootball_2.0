@@ -109,22 +109,22 @@ export default function CompeticionesPage() {
         const response = await competitionsApi.getAll();
         const competitions = Array.isArray(response) ? response : [];
 
-        // Transformar datos
+        // Transformar datos del backend (API-Football)
         const transformedCompetitions: Competition[] = competitions.map((item: any) => ({
           id: item.id,
           name: item.name || 'Competición',
           country: item.country || 'Internacional',
-          type: item.type || 'Liga',
+          type: item.type === 'league' ? 'Liga' : item.type === 'cup' ? 'Copa' : item.type || 'Liga',
           logo: item.logo || '🏆',
           logoImage: item.logo || '',
-          backgroundImage: item.backgroundImage || '',
-          season: item.season || '2024/25',
-          teams: item.teams || item.numberOfTeams || 20,
-          matchesPlayed: item.matchesPlayed || 0,
-          matchesRemaining: item.matchesRemaining || 0,
-          leader: item.leader || 'Por definir',
-          topScorer: item.topScorer || 'Por definir',
-          featured: item.featured || false,
+          backgroundImage: '',
+          season: item.season || '2024',
+          teams: 20,
+          matchesPlayed: 0,
+          matchesRemaining: 0,
+          leader: 'Por definir',
+          topScorer: 'Por definir',
+          featured: ['Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'UEFA Champions League'].includes(item.name),
           color: defaultColors[item.name] || "from-gray-600 to-gray-800"
         }));
 
