@@ -3,7 +3,10 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 @Injectable()
 export class CompetitionsService {
   private readonly apiUrl = 'https://v3.football.api-sports.io';
-  private readonly apiKey = process.env.API_FOOTBALL_KEY;
+
+  private getApiKey(): string {
+    return process.env.API_FOOTBALL_KEY || '';
+  }
 
   private async fetchFromApi(endpoint: string, params: Record<string, string> = {}) {
     const queryString = new URLSearchParams(params).toString();
@@ -11,7 +14,7 @@ export class CompetitionsService {
 
     const response = await fetch(url, {
       headers: {
-        'x-apisports-key': this.apiKey,
+        'x-apisports-key': this.getApiKey(),
       },
     });
 
