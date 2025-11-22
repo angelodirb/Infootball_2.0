@@ -75,13 +75,35 @@ export default function FeaturedMatches() {
     setError('');
     try {
       const response = await matchesApi.getByDate(selectedDate);
-      if (response.success) {
-        // Tomar solo los primeros 4 partidos para la sección destacado
-        const featuredMatches = response.data?.slice(0, 4) || [];
-        setMatches(featuredMatches);
-      } else {
-        throw new Error(response.error || 'Error al cargar partidos');
-      }
+      // La API devuelve directamente el array de partidos
+      const matchesArray = Array.isArray(response) ? response : [];
+
+      // Transformar los datos al formato esperado
+      const featuredMatches = matchesArray.slice(0, 4).map((match: any) => ({
+        externalId: match.id?.toString() || match.externalId,
+        matchDate: match.date ? `${match.date}T${match.time || '00:00'}` : match.matchDate,
+        homeScore: match.homeScore,
+        awayScore: match.awayScore,
+        status: match.status || 'scheduled',
+        venue: match.venue || 'Estadio',
+        homeTeam: {
+          name: match.homeTeam?.name || 'Local',
+          logo: match.homeTeam?.logo || '',
+          shortName: match.homeTeam?.shortName || match.homeTeam?.name?.substring(0, 3) || 'LOC'
+        },
+        awayTeam: {
+          name: match.awayTeam?.name || 'Visitante',
+          logo: match.awayTeam?.logo || '',
+          shortName: match.awayTeam?.shortName || match.awayTeam?.name?.substring(0, 3) || 'VIS'
+        },
+        competition: {
+          name: match.competition?.name || 'Liga',
+          logo: match.competition?.logo || '⚽',
+          country: match.competition?.country || ''
+        }
+      }));
+
+      setMatches(featuredMatches);
     } catch (error) {
       console.error('Error loading featured matches:', error);
       setError('Error al cargar partidos');
