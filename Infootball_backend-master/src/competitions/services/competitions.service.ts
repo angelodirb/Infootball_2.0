@@ -84,7 +84,8 @@ export class CompetitionsService {
   }
 
   async getStandings(id: string, season?: string) {
-    const currentSeason = season || new Date().getFullYear().toString();
+    // Usar 2024 como temporada por defecto (temporada 2024/2025)
+    const currentSeason = season || '2024';
     
     const standings = await this.fetchFromApi('/standings', {
       league: id,
@@ -126,7 +127,8 @@ export class CompetitionsService {
   }
 
   async getTopScorers(id: string, season?: string) {
-    const currentSeason = season || new Date().getFullYear().toString();
+    // Usar 2024 como temporada por defecto (temporada 2024/2025)
+    const currentSeason = season || '2024';
 
     const scorers = await this.fetchFromApi('/players/topscorers', {
       league: id,
@@ -152,7 +154,8 @@ export class CompetitionsService {
   }
 
   async getUpcomingMatches(id: string, season?: string) {
-    const currentSeason = season || new Date().getFullYear().toString();
+    // Usar 2024 como temporada por defecto (temporada 2024/2025)
+    const currentSeason = season || '2024';
 
     const fixtures = await this.fetchFromApi('/fixtures', {
       league: id,
