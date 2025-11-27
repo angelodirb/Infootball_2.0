@@ -127,7 +127,7 @@ export class CompetitionsService {
 
   async getTopScorers(id: string, season?: string) {
     const currentSeason = season || new Date().getFullYear().toString();
-    
+
     const scorers = await this.fetchFromApi('/players/topscorers', {
       league: id,
       season: currentSeason,
@@ -148,6 +148,44 @@ export class CompetitionsService {
       goals: item.statistics[0].goals.total,
       assists: item.statistics[0].goals.assists || 0,
       matches: item.statistics[0].games.appearences,
+    }));
+  }
+
+  async getUpcomingMatches(id: string, season?: string) {
+    const currentSeason = season || new Date().getFullYear().toString();
+
+    const fixtures = await this.fetchFromApi('/fixtures', {
+      league: id,
+      season: currentSeason,
+      next: '10', // Obtener los próximos 10 partidos
+    });
+
+    return fixtures.map((item: any) => ({
+      id: item.fixture.id,
+      date: item.fixture.date,
+      timestamp: item.fixture.timestamp,
+      venue: {
+        name: item.fixture.venue?.name || 'Por definir',
+        city: item.fixture.venue?.city || '',
+      },
+      status: {
+        short: item.fixture.status.short,
+        long: item.fixture.status.long,
+      },
+      homeTeam: {
+        id: item.teams.home.id,
+        name: item.teams.home.name,
+        logo: item.teams.home.logo,
+      },
+      awayTeam: {
+        id: item.teams.away.id,
+        name: item.teams.away.name,
+        logo: item.teams.away.logo,
+      },
+      goals: {
+        home: item.goals.home,
+        away: item.goals.away,
+      },
     }));
   }
 }

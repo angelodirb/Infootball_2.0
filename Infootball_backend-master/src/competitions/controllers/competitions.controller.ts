@@ -30,4 +30,9 @@ export class CompetitionsController {
   getTopScorers(@Param('id') id: string, @Query('season') season?: string) {
     return this.competitionsService.getTopScorers(id, season);
   }
+
+  @Get(':id/matches')
+  getUpcomingMatches(@Param('id') id: string, @Query('season') season?: string) {
+    return this.competitionsService.getUpcomingMatches(id, season);
+  }
 }
