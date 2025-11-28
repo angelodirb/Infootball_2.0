@@ -32,6 +32,8 @@ export const competitionsApi = {
   getAll: () => fetch(`${API_URL}/competitions`).then(handleResponse),
   getById: (id: number) => fetch(`${API_URL}/competitions/${id}`).then(handleResponse),
   getStandings: (id: number) => fetch(`${API_URL}/competitions/${id}/standings`).then(handleResponse),
+  getTopScorers: (id: number) => fetch(`${API_URL}/competitions/${id}/scorers`).then(handleResponse),
+  getUpcomingMatches: (id: number) => fetch(`${API_URL}/competitions/${id}/matches`).then(handleResponse),
 };
 
 // NEWS
