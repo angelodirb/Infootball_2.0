@@ -11,7 +11,7 @@
 ### 1. **Frontend (Next.js + React)**
 - ✅ Repositorio: https://github.com/angelodirb/Infootball_2.0
 - ✅ Carpeta: `Infootball_frontend-miguel`
-- ✅ Deployment: https://infootball-2-0vercel.app
+- ✅ Deployment: https://infootball-2-0-226m91tll-miguels-projects-0ea92a88.vercel.app   o     infootball-2-0-226m91tll-miguels-projects-0ea92a88.vercel.app
 - ✅ Estado: 100% funcional en desarrollo local
 
 ### 2. **Backend (NestJS)**
