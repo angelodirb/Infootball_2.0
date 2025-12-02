@@ -1,4 +1,4 @@
-# InFootball 2.0 - Documento de Entrega Profesional
+# InFootball 2.0 - Documento de Entrega 
 
 **Fecha de entrega:** 30 de Noviembre 2025  
 **Versión:** 1.0 (Producción Parcial)  
